@@ -8,7 +8,7 @@ services:
     hostname: namenode
 
 # Сначала запусти меня
-    # command: ["hdfs", "namenode", "-format", "-force"]
+# command: ["hdfs", "namenode", "-format", "-force"]
 # А уже потом спокойно запускай меня
     command: ["hdfs", "namenode"]
     env_file:
@@ -134,7 +134,8 @@ services:
 #    volumes:
 #      - ./hadoop_conf/etc:/opt/hadoop/etc
 #      - ./hive_conf:/opt/hive/conf
-#    command: ["bash", "/opt/zeppelin/bin/zeppelin.sh"]
+#  
+# command: ["bash", "/opt/zeppelin/bin/zeppelin.sh"]
 
 networks:
   default:
