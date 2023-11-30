@@ -27,6 +27,7 @@ RUN apt-get update -y \
     && apt-get install -y python3-pip
 
 RUN mkdir -p /tmp/hadoop-hadoop
+RUN pip install nltk
 
 WORKDIR /opt/hadoop
 
