@@ -7,6 +7,7 @@ from pyflink.datastream.connectors.kafka import KafkaSource, \
     KafkaOffsetsInitializer, KafkaSink, KafkaRecordSerializationSchema
 from pyflink.datastream.formats.json import JsonRowDeserializationSchema
 from pyflink.datastream.functions import MapFunction
+from pyflink.datastream.checkpoint_storage import CheckpointStorage
 
 
 def python_data_stream_example():
@@ -17,7 +18,10 @@ def python_data_stream_example():
     env.set_parallelism(1)
     env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
     
-
+    storage = CheckpointStorage(r"file:///opt/pyflink/tmp/checkpoints/logs") # local
+    # storage = CheckpointStorage(r"hdfs://namenode:8020/flink/checkpoints") # hadoop
+    env.get_checkpoint_config().set_checkpoint_storage(storage)
+    env.enable_checkpointing(3000)
     type_info: RowTypeInfo = Types.ROW_NAMED(['device_id', 'temperature', 'execution_time'],
                                              [Types.LONG(), Types.DOUBLE(), Types.INT()])
 
@@ -25,8 +29,8 @@ def python_data_stream_example():
 
     source = KafkaSource.builder() \
         .set_bootstrap_servers('kafka:9092') \
-        .set_topics('itmo2023') \
-        .set_group_id('pyflink-e2e-source') \
+        .set_topics('test_topic') \
+        .set_group_id('test_topic_group') \
         .set_starting_offsets(KafkaOffsetsInitializer.earliest()) \
         .set_value_only_deserializer(json_row_schema) \
         .build()
@@ -34,7 +38,7 @@ def python_data_stream_example():
     sink = KafkaSink.builder() \
         .set_bootstrap_servers('kafka:9092') \
         .set_record_serializer(KafkaRecordSerializationSchema.builder()
-                               .set_topic('itmo2023_processed')
+                               .set_topic('test_topic_processed')
                                .set_value_serialization_schema(SimpleStringSchema())
                                .build()
                                ) \
