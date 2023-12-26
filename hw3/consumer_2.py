@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 from functools import wraps
 import time
+from random import randint
 
 
 def backoff(tries: int, sleep: int) -> callable:
@@ -21,6 +22,11 @@ def backoff(tries: int, sleep: int) -> callable:
                     
 @backoff(tries=10,sleep=60)
 def message_handler(value)->None:
+    error_prob = 7
+    if randint(0, 10) < error_prob:
+        raise Exception
+    else:
+        pass
     print(value)
 
 
