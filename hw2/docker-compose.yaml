@@ -7,7 +7,7 @@ services:
       target: build_hadoop
     hostname: namenode
 #     Сначала запусти меня
-#     command: ["hdfs", "namenode", "-format", "-force"]
+    # command: ["hdfs", "namenode", "-format", "-force"]
 #     А уже потом спокойно запускай меня
     command: ["hdfs", "namenode"]
     env_file:
